@@ -71,5 +71,19 @@ app.post( '/deletetask', urlEncodedParser, function( req, res ){
   });// end pg.connect
 });// end post
 
+
+app.put('/completedTasks', urlEncodedParser, function(req, res){
+  console.log("updating...", req.body);
+  pg.connect(connectionString, function (err, client, done){
+    if (err){
+      console.log("put");
+    } else {
+      var query = client.query('UPDATE tasks SET status = TRUE WHERE id = $1', [req.body.id]);
+      done();
+      res.send("yo");
+    }
+  });
+});
+
 // static folder
 app.use( express.static( 'public' ) );

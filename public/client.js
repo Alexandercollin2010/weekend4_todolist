@@ -41,7 +41,18 @@ $(document).ready(function(){
   }// end deleteTask
 
   function completeTask(){
-
+      var objectToSend = {
+      id: $(this).attr('data')
+    };
+      $.ajax({
+        type:'PUT',
+        url:'/completedTasks',
+        data: objectToSend,
+        success:function(response){
+      console.log(response, 'yo');
+      }
+    });//end ajax
+    getTasks();
   }// end completeTask
 
   function getTasks(){
@@ -53,7 +64,11 @@ $(document).ready(function(){
         $('#listTasks').html('');
         var outputText= '';
         for (var i = 0; i < response.length; i++) {
-          outputText += '<p>' + response[i].name + '</p><button class="deleteButton" data="' + response[i].id + '">Delete Task</button><button class="completeButton">Completed Task</button>';
+          if(response[i].status === true){
+          outputText += '<p class="complete">' + response[i].name + '</p><button class="deleteButton" data="' + response[i].id + '">Delete Task</button><button class="completeButton" data="' + response[i].id + '">Completed Task</button>';
+        }else {
+          outputText += '<p>' + response[i].name + '</p><button class="deleteButton" data="' + response[i].id + '">Delete Task</button><button class="completeButton" data="' + response[i].id + '">Completed Task</button>';
+        }
         }// end for loop
         $('#listTasks').html(outputText);
       }// end success

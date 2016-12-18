@@ -1,0 +1,32 @@
+body {
+  background-image: url(http://www.drodd.com/images15/minnesota-timberwolves5.jpg);
+}
+
+div.list {
+  text-align: center;
+  margin-left: 300px;
+  margin-right: 300px;
+}
+
+.deleteButton {
+  background-color: orange;
+}
+
+.completeButton {
+  background-color: blue;
+  color: white;
+}
+
+p {
+  font-style: italic;
+  font-weight: bold;
+  color: #50AAE5;
+}
+
+h1 {
+  color: #2EED0C;
+}
+
+p.complete {
+  background-color: green;
+}
