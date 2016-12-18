@@ -18,19 +18,17 @@ $(document).ready(function(){
         getTasks();
       }// end success
     });//end ajax post
+    $('#taskInput').val('');
   });// end submitTask on click function
 
-  idArray= [];
-  console.log('This is idArray: ', idArray);
+
   function deleteTask(){
-    var id = 1;
-    id ++;
-    console.log('This is ID: ', id);
+    var id = $(this).attr('data');
    $.ajax({
        url: '/deletetask',
        type: 'POST',
        data: {
-           id: idArray[id]
+           id: id
        },
        success: function(response) {
            console.log(response);
@@ -55,8 +53,7 @@ $(document).ready(function(){
         $('#listTasks').html('');
         var outputText= '';
         for (var i = 0; i < response.length; i++) {
-          idArray.push(response[i].id);
-          outputText += '<p>' + response[i].name + '</p><button class="deleteButton";">Delete Task</button><button class="completeButton"">Completed Task</button>';
+          outputText += '<p>' + response[i].name + '</p><button class="deleteButton" data="' + response[i].id + '">Delete Task</button><button class="completeButton">Completed Task</button>';
         }// end for loop
         $('#listTasks').html(outputText);
       }// end success
