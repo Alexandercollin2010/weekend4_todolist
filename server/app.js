@@ -18,7 +18,7 @@ app.get( '/', function( req, res ){
   res.sendFile( path.resolve( 'public/index.html' ) );
 }); // end base url
 
-// get all the tasks from the database
+// get all the tasks from the database and sorting them in the order of false to true
 app.get( '/getTasks', function( req, res ){
   console.log( 'getTasks url hit' );
   pg.connect(connectionString, function(err, client, done) {
@@ -26,12 +26,10 @@ app.get( '/getTasks', function( req, res ){
              console.log(err);
          } else {
              var results = [];
-             var query = client.query('SELECT * FROM tasks ORDER BY ID');
-
+             var query = client.query('SELECT * FROM tasks ORDER BY status, ID');
              query.on('row', function(row) {
                  results.push(row);
              });
-
              query.on('end', function() {
                  done();
                  res.json(results);
@@ -43,12 +41,10 @@ app.get( '/getTasks', function( req, res ){
 // get task from client and store in database
 app.post( '/addtask', urlEncodedParser, function( req, res ){
   console.log( 'addtask route hit' );
-
   pg.connect(connectionString, function(err, client, done){
     if(err){
       console.log(err);
     } else {
-      console.log('back from db');
       client.query('INSERT INTO tasks(name, status) values($1, $2)', [req.body.task,req.body.status] );
       done();
       res.send('Got task');
@@ -56,14 +52,13 @@ app.post( '/addtask', urlEncodedParser, function( req, res ){
   });// end pg.connect
 });// end post
 
+// Deleting a task in the database by I.D.
 app.post( '/deletetask', urlEncodedParser, function( req, res ){
   console.log( 'deletetask route hit' );
-
   pg.connect(connectionString, function(err, client, done){
     if(err){
       console.log(err);
     } else {
-      console.log('back from db');
       client.query('DELETE FROM tasks WHERE id=$1',[req.body.id]);
            res.sendStatus(200);
            done();
@@ -71,19 +66,19 @@ app.post( '/deletetask', urlEncodedParser, function( req, res ){
   });// end pg.connect
 });// end post
 
-
+// Updating the status to be true in the database
 app.put('/completedTasks', urlEncodedParser, function(req, res){
-  console.log("updating...", req.body);
+  console.log('completedTasks route hit');
   pg.connect(connectionString, function (err, client, done){
     if (err){
       console.log("put");
     } else {
       var query = client.query('UPDATE tasks SET status = TRUE WHERE id = $1', [req.body.id]);
       done();
-      res.send("yo");
-    }
-  });
-});
+      res.send("complete");
+    }// end else statement
+  });// end pg.connect
+});// end app.put
 
 // static folder
 app.use( express.static( 'public' ) );
