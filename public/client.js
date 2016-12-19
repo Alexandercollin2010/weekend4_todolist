@@ -3,7 +3,14 @@ $(document).ready(function(){
   $(document).on('click', '.deleteButton', deleteTask);
   $(document).on('click', '.completeButton', completeTask);
 
-  // submits task to /addtask post on th server
+  // allows you to submit form when you hit enter
+  $('#form').keydown(function(e) {
+    if (e.keyCode == 13) {
+      $('#form').submit();
+    }// end if statement
+  });// end form function
+
+  // submits task to /addtask post on the server
   $('#submitTask').on('click', function(){
     var taskToSend = {
       task: $('#taskInput').val(),
@@ -36,7 +43,7 @@ $(document).ready(function(){
           getTasks();
         },
         error: function(error) {
-          console.log("AJAX error:", error);
+          console.log(error);
         }
       });// end ajax call
     }// end if statement
